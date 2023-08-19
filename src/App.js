@@ -96,8 +96,9 @@ function App() {
       const server = await device.gatt.connect();
       const service = await server.getPrimaryService(0xdddd);
       const characteristic = await service.getCharacteristic(0xffff);
-      let val = await characteristic.value
-      log('> Read:' + val);
+      let val = await characteristic.readValue()
+      const decoder = new TextDecoder('utf-8')
+      log('> Read:' + decoder.decode(val));
 
     } catch (error) {
       log("Argh! " + error);
@@ -109,7 +110,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.js</code> commit 2048
+          Edit <code>src/App.js</code> commit 2050
         </p>
         <button onClick={request}>REQUEST</button>
         <br></br>
