@@ -45,7 +45,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.js</code> commit 1321
+          Edit <code>src/App.js</code> commit 1341
         </p>
         <button onClick={onButtonClick}>BLE</button>
         <span id="status"></span>
