@@ -97,7 +97,7 @@ function App() {
       const service = await server.getPrimaryService(0xdddd);
       const characteristic = await service.getCharacteristic(0xffff);
       let val = await characteristic.readValue();
-      log('> Read:                 ' + val.getUint8(0));
+      log('> Read:' + val);
 
     } catch (error) {
       log("Argh! " + error);
