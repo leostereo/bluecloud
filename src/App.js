@@ -3,78 +3,40 @@ import logo from './logo.svg';
 import './App.css';
 
 function App() {
-  class GenericDevice {
-  
-    constructor() {
-      this.device = null;
-      this.onDisconnected = this.onDisconnected.bind(this);
-    }
-    
-    async request() {
-  
-      let options = {
-        "filters": [{
-          "name": "blehr_sensor_1.0"
-        }],
-        "optionalServices": [0xDDDD]
-      };
-      try{
-  
-        this.device = await navigator.bluetooth.requestDevice(options);
-      }catch{
-  
-        alert("No device selected");
-      }
-      this.device.addEventListener('gattserverdisconnected', this.onDisconnected);
-    }
-    
-    async connect() {
-      if (!this.device) {
-        return Promise.reject('Device is not connected.');
-      }
-      await this.device.gatt.connect();
-    }
-    
-    async readManufacturername() {
-      setData({"now":"looking for services"});
-      const service = await this.device.gatt.getPrimaryService(0xDDDD);
-      const characteristic = await service.getCharacteristic(0xFFFF);
-      await characteristic.readValue();
-      alert(characteristic);
-      setData(characteristic);
-    }
-  
-    disconnect() {
-      if (!this.device) {
-        return Promise.reject('Device is not connected.');
-      }
-      return this.device.gatt.disconnect();
-    }
-  
-    onDisconnected() {
-      console.log('Device is disconnected.');
-    }
-  }
+
 
   const [data, setData] = useState({"init data": "nada"});
 
-  
-  var genericDevice = new GenericDevice();
-  
- 
 
 
   async function onButtonClick() {
 
-    try {
-      await genericDevice.request();
-      await genericDevice.connect();
-      /* Do something with genericDevice... */
-      await genericDevice.readManufacturername()
-
-    } catch(error) {
-      setData(error)
-    }
+    navigator.bluetooth.requestDevice({
+      acceptAllDevices: true,
+      optionalServices: [0xDDDD] // Required to access service later. 
+      
+      })
+    .then(device => device.gatt.connect())
+    .then(server => {
+      // Getting Battery Service…
+      return server.getPrimaryService(0xDDDD);
+    })
+    .then(service => {
+      // Getting Battery Level Characteristic…
+      return service.getCharacteristic(0xFFFF);
+    })
+    .then(characteristic => {
+      // Reading Battery Level…
+      return characteristic.readValue();
+    })
+    .then(value => {
+      setData(value);
+      console.log(`Battery percentage is ${value.getUint8(0)}`);
+    })
+    .catch(error => { 
+      setData(error)  
+      console.error(error); 
+    });
 
   }
 
@@ -85,7 +47,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.js</code> commit 10:05
+          Edit <code>src/App.js</code> commit 10:38
         </p>
         <button onClick={onButtonClick}>BLE</button>
         <span>{JSON.stringify(data)}</span>
