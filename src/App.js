@@ -16,7 +16,9 @@ function App() {
       optionalServices: [0xDDDD] // Required to access service later. 
       
       })
-    .then(device => device.gatt.connect())
+    .then(device => {
+      setData({"status":"connecting to GATT :"+device.name})
+      device.gatt.connect()})
     .then(server => {
       // Getting Battery Service…
       return server.getPrimaryService(0xDDDD);
