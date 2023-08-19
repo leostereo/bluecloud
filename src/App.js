@@ -7,37 +7,64 @@ function App() {
     log(status);
   });
 
-  let  device = null
+  let device = null;
 
   let status = {
     name: "device.name",
     id: "device.id",
     conn: "device.connected",
   };
+
   const log = (string) => {
     if (typeof string === "object") {
-      string = JSON.stringify(string, null, "\t")
+      string = JSON.stringify(string, null, "\t");
     }
 
     document.getElementById("status").textContent = string;
   };
 
   async function connect() {
-    log('Connecting to Bluetooth Device...');
+    log("Connecting to Bluetooth Device...");
     await device.gatt.connect();
-    log('> Bluetooth Device connected');
+    device.addEventListener("gattserverdisconnected", onDisconnected);
+
+    log("> Bluetooth Device connected");
   }
-  
+
   function disconnect() {
     if (!device) {
       return;
     }
-    log('Disconnecting from Bluetooth Device...');
+    log("Disconnecting from Bluetooth Device...");
     if (device.gatt.connected) {
       device.gatt.disconnect();
     } else {
-      log('> Bluetooth Device is already disconnected');
+      log("> Bluetooth Device is already disconnected");
     }
+  }
+
+  function onDisconnected(event) {
+    // Object event.target is Bluetooth Device getting disconnected.
+    log("> Bluetooth Device disconnected");
+  }
+
+  function reconnect() {
+    if (!device) {
+      return;
+    }
+    if (device.gatt.connected) {
+      log("> Bluetooth Device is already connected");
+      return;
+    }
+    try {
+      connect();
+    } catch (error) {
+      log("Argh! " + error);
+    }
+  }
+
+  async function logdevice() {
+    log(device);
   }
 
   async function request() {
@@ -54,9 +81,7 @@ function App() {
         conn: device.connected,
       };
 
-
-      log('Connecting to GATT Server...');
-
+      log("Connecting to GATT Server...");
     } catch (error) {
       log("Argh! " + error);
     }
@@ -70,8 +95,15 @@ function App() {
           Edit <code>src/App.js</code> commit 1530
         </p>
         <button onClick={request}>REQUEST</button>
+        <br></br>
         <button onClick={connect}>Connect</button>
+        <br></br>
+        <button onClick={reconnect}>Reconnect</button>
+        <br></br>
         <button onClick={disconnect}>Disonnect</button>
+        <br></br>
+        <button onClick={logdevice}>device</button>
+        <br></br>
         <span id="status"></span>
       </header>
     </div>
