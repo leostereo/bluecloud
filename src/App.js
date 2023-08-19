@@ -39,6 +39,7 @@ function App() {
       const service = await this.device.gatt.getPrimaryService(0xDDDD);
       const characteristic = await service.getCharacteristic(0xFFFF);
       await characteristic.readValue();
+      alert(characteristic);
       setData(characteristic);
     }
   
@@ -54,7 +55,7 @@ function App() {
     }
   }
 
-  const [data, setData] = useState({});
+  const [data, setData] = useState({"init data": "nada"});
 
   
   var genericDevice = new GenericDevice();
@@ -86,10 +87,9 @@ function App() {
           Edit <code>src/App.js</code> and save to reloadddds
         </p>
         <button onClick={onButtonClick}>BLE</button>
-      </header>
-      <body>
         <span>{JSON.stringify(data)}</span>
-      </body>
+      </header>
+      
     </div>
   );
 }
