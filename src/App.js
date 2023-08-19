@@ -34,7 +34,12 @@ function App() {
         conn: device.connected,
       };
 
-      log(status);
+
+      log('Connecting to GATT Server...');
+      const server = await device.gatt.connect();
+
+      log(server);
+
     } catch (error) {
       log("Argh! " + error);
     }
@@ -45,7 +50,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.js</code> commit 1341
+          Edit <code>src/App.js</code> commit 1352
         </p>
         <button onClick={onButtonClick}>BLE</button>
         <span id="status"></span>
