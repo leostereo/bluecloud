@@ -1,13 +1,15 @@
+import {useState} from 'react';
 import logo from './logo.svg';
 import './App.css';
 
 function App() {
 
-
-  function onButtonClick() {
-
+  const [data, setData] = useState({});
 
   
+  function onButtonClick() {
+
+ 
     let options = {};
     options.acceptAllDevices = true;
 
@@ -19,6 +21,8 @@ function App() {
       console.log('> Name:             ' + device.name);
       console.log('> Id:               ' + device.id);
       console.log('> Connected:        ' + device.gatt.connected);
+      setData(device)
+    
     })
     .catch(error => {
       console.log('Argh! ' + error);
@@ -36,6 +40,9 @@ function App() {
         </p>
         <button onClick={onButtonClick}>BLE</button>
       </header>
+      <body>
+        <span>{JSON.stringify(data)}</span>
+      </body>
     </div>
   );
 }
