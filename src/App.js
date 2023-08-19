@@ -3,22 +3,22 @@ import logo from './logo.svg';
 import './App.css';
 
 function App() {
-
-
-  const [data, setData] = useState({"init data": "nada"});
-
-
-
+  
+  
+  
   async function onButtonClick() {
-
+    
+    document.getElementById("status").textContent = `choose some device`
     navigator.bluetooth.requestDevice({
       acceptAllDevices: true,
       optionalServices: [0xDDDD] // Required to access service later. 
       
       })
     .then(device => {
-      setData({"status":"connecting to GATT :"+device.name})
-      device.gatt.connect()})
+      device.gatt.connect()
+      
+      document.getElementById("status").textContent = ` connected to ${device.name}`
+    })
     .then(server => {
       // Getting Battery Service…
       return server.getPrimaryService(0xDDDD);
@@ -32,11 +32,11 @@ function App() {
       return characteristic.readValue();
     })
     .then(value => {
-      setData(value);
+      document.getElementById("status").textContent = `Characteristic ${value.getUint8(0)}`
       console.log(`Battery percentage is ${value.getUint8(0)}`);
     })
     .catch(error => { 
-      setData(error)  
+      document.getElementById("status").textContent = `Error ${error}`
       console.error(error); 
     });
 
@@ -49,10 +49,10 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.js</code> commit 10:52
+          Edit <code>src/App.js</code> commit 11:07
         </p>
         <button onClick={onButtonClick}>BLE</button>
-        <span>{JSON.stringify(data)}</span>
+        <span id="status">nothing</span>
       </header>
       
     </div>
