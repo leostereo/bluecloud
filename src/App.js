@@ -84,7 +84,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.js</code> and save to reloadddds
+          Edit <code>src/App.js</code> commit 10:05
         </p>
         <button onClick={onButtonClick}>BLE</button>
         <span>{JSON.stringify(data)}</span>
