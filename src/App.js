@@ -64,7 +64,7 @@ function App() {
   }
 
   async function logdevice() {
-    log(device);
+    log(device.gatt);
   }
 
   async function request() {
@@ -86,6 +86,21 @@ function App() {
       log("Argh! " + error);
     }
   }
+  async function read() {
+    try {
+      let options = {
+        filters: [{ services: [0xdddd] }, { name: "blehr_sensor_1.0" }],
+      };
+
+      device = await navigator.bluetooth.requestDevice(options);
+      const server = await device.gatt.connect();
+      const service = await server.getPrimaryService(0xdddd);
+      const characteristic = await service.getCharacteristic(0xffff);
+      log('> Read:                 ' + characteristic.properties.read);
+    } catch (error) {
+      log("Argh! " + error);
+    }
+  }
 
   return (
     <div className="App">
@@ -101,6 +116,8 @@ function App() {
         <button onClick={reconnect}>Reconnect</button>
         <br></br>
         <button onClick={disconnect}>Disonnect</button>
+        <br></br>
+        <button onClick={read}>Read</button>
         <br></br>
         <button onClick={logdevice}>device</button>
         <br></br>
