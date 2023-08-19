@@ -96,7 +96,9 @@ function App() {
       const server = await device.gatt.connect();
       const service = await server.getPrimaryService(0xdddd);
       const characteristic = await service.getCharacteristic(0xffff);
-      log('> Read:                 ' + characteristic.properties.read);
+      let val = await characteristic.readValue();
+      log('> Read:                 ' + val.getUint8(0));
+
     } catch (error) {
       log("Argh! " + error);
     }
