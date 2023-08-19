@@ -36,6 +36,7 @@ function App() {
     }
     
     async readManufacturername() {
+      setData({"now":"looking for services"});
       const service = await this.device.gatt.getPrimaryService(0xDDDD);
       const characteristic = await service.getCharacteristic(0xFFFF);
       await characteristic.readValue();
@@ -72,7 +73,7 @@ function App() {
       await genericDevice.readManufacturername()
 
     } catch(error) {
-      console.log(error);
+      setData(error)
     }
 
   }
