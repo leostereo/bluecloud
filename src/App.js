@@ -49,7 +49,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.js</code> commit 10:38
+          Edit <code>src/App.js</code> commit 10:52
         </p>
         <button onClick={onButtonClick}>BLE</button>
         <span>{JSON.stringify(data)}</span>
