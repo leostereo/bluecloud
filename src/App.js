@@ -88,17 +88,26 @@ function App() {
   }
   async function read() {
     try {
-      let options = {
-        filters: [{ services: [0xdddd] }, { name: "blehr_sensor_1.0" }],
-      };
+      // let options = {
+      //   filters: [{ services: [0xdddd] }, { name: "blehr_sensor_1.0" }],
+      // };
 
-      device = await navigator.bluetooth.requestDevice(options);
-      const server = await device.gatt.connect();
-      const service = await server.getPrimaryService(0xdddd);
-      const characteristic = await service.getCharacteristic(0xffff);
-      let val = await characteristic.readValue()
-      const decoder = new TextDecoder('utf-8')
-      log('> Read:' + decoder.decode(val));
+      //device = await navigator.bluetooth.requestDevice(options);
+      if (device.gatt.connected) {
+        log("> Bluetooth Device is already connected");
+        
+        const server = await device.gatt.connect();
+        const service = await server.getPrimaryService(0xdddd);
+        const characteristic = await service.getCharacteristic(0xffff);
+        let val = await characteristic.readValue()
+        const decoder = new TextDecoder('utf-8')
+        log('> Read:' + decoder.decode(val));
+        
+      }else{
+
+        log('> Read: please connect first' );
+        
+      }
 
     } catch (error) {
       log("Argh! " + error);
@@ -110,7 +119,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.js</code> commit 2050
+          Edit <code>src/App.js</code> commit 2100
         </p>
         <button onClick={request}>REQUEST</button>
         <br></br>
