@@ -113,13 +113,38 @@ function App() {
       log("Argh! " + error);
     }
   }
+  async function turn(value) {
+
+    try {
+
+      //device = await navigator.bluetooth.requestDevice(options);
+      if (device.gatt.connected) {
+        log("> Bluetooth Device is already connected");
+        
+        const command = value ? "prender" : "apagar";
+
+        const server = await device.gatt.connect();
+        const service = await server.getPrimaryService(0xdddd);
+        const characteristic = await service.getCharacteristic(0xeeee);
+        characteristic.writeValue(command);
+        
+      }else{
+
+        log('> Read: please connect first' );
+        
+      }
+
+    } catch (error) {
+      log("Argh! " + error);
+    }
+  }
 
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.js</code> commit 2100
+          Edit <code>src/App.js</code> commit 2126
         </p>
         <button onClick={request}>REQUEST</button>
         <br></br>
@@ -130,6 +155,10 @@ function App() {
         <button onClick={disconnect}>Disonnect</button>
         <br></br>
         <button onClick={read}>Read</button>
+        <br></br>
+        <button onClick={() => turn(1)}>ON</button>
+        <br></br>
+        <button onClick={() => turn(0)}>OFF</button>
         <br></br>
         <button onClick={logdevice}>device</button>
         <br></br>
