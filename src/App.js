@@ -94,8 +94,7 @@ function App() {
 
       //device = await navigator.bluetooth.requestDevice(options);
       if (device.gatt.connected) {
-        log("> Bluetooth Device is already connected");
-        
+       
         const server = await device.gatt.connect();
         const service = await server.getPrimaryService(0xdddd);
         const characteristic = await service.getCharacteristic(0xffff);
@@ -119,15 +118,17 @@ function App() {
 
       //device = await navigator.bluetooth.requestDevice(options);
       if (device.gatt.connected) {
-        log("> Bluetooth Device is already connected");
         
         const command = value ? "prender" : "apagar";
 
         const server = await device.gatt.connect();
         const service = await server.getPrimaryService(0xdddd);
         const characteristic = await service.getCharacteristic(0xeeee);
-        characteristic.writeValue(command);
-        
+        const encoder = new TextEncoder('utf-8');
+        const encondedCommand = encoder.encode(command);
+        characteristic.writeValue(encondedCommand);
+        log("> Char wrotten");
+      
       }else{
 
         log('> Read: please connect first' );
@@ -144,7 +145,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Edit <code>src/App.js</code> commit 2126
+          Edit <code>src/App.js</code> commit 2142
         </p>
         <button onClick={request}>REQUEST</button>
         <br></br>
